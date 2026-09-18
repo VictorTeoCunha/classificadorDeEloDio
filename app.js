@@ -1,3 +1,54 @@
+const historicoPartidas = []
+
+function main (){
+    //Variáveis de controle do DOM
+    let numVitoria = Number(document.getElementById("vitoria").value)
+    let numDerrota = Number(document.getElementById("derrota").value)
+    let respostaDom = document.getElementById('resposta')
+
+    //Variáveis de armazenamento de retorno de função
+    let saldoRank= qntVitDer(numVitoria,numDerrota)   
+    
+    //Validações para entradas fornecidas pelo usuário.
+    if (numVitoria == '' || numDerrota === ''){
+        alert ("Preencha todos os campos para calcular seu Elo")
+        
+    } else if (numVitoria < 0 || numDerrota < 0){
+        alert ("O número tem que ser maior do que 0")
+    } else {
+        respostaDom.innerHTML = `O Herói tem um saldo de vitoria de ${saldoRank} e por isso está no nível ${elo(saldoRank)}`
+        const atualizarhistorico = {
+            vitorias: numVitoria,
+            derrotas:numDerrota,
+            saldo:saldoRank,
+            elo:elo(saldoRank)
+
+        }
+        historicoPartidas.push(atualizarhistorico)
+        console.log(historicoPartidas)
+    }
+}
+
+
+
+function gerarRelatorio() {
+    let relatorioDom = document.getElementById('relatorio')
+
+    if (historicoPartidas.length === 0) {
+        relatorioDom.innerHTML = "Nenhum histórico registrado ainda."
+        return;
+    }
+
+    let textoRelatorio = `Você usou o cálculo de elo ${historicoPartidas.length} vezes. <br><br><strong>Registros:</strong><br>`
+
+    historicoPartidas.forEach((historico, index) => {
+        textoRelatorio += `- Tentativa ${index + 1}: Saldo de ${historico.saldo} | Elo: ${historico.elo}<br>`
+    })
+
+    relatorioDom.innerHTML = textoRelatorio
+
+}
+
 function elo(saldoRank){
     
     const elos = ["Ferro", "Bronze", "Prata", "Ouro", "Diamante", "Lendário", "Imortal"]
@@ -22,11 +73,4 @@ function elo(saldoRank){
 
 function qntVitDer(vitoria, derrota){
     return vitoria - derrota
-}
-
-function main (){
-    let numVitoria = Number(document.getElementById("vitoria").value)
-    let numDerrota = Number(document.getElementById("derrota").value)
-    let saldoRank= qntVitDer(numVitoria,numDerrota)
-    console.log(`O Herói tem um saldo de vitoria de ${saldoRank} e por isso está no nível ${elo(saldoRank)}`)
 }
